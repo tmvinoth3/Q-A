@@ -1,0 +1,64 @@
+﻿{%extends 'master_page.html'%}
+{% load static %}
+<!--<!DOCTYPE html>-->
+<!--<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Home</title>
+</head>
+<body>-->
+
+    {%block content%}
+
+    <div class="container" id="cont">
+            <div id="topicDiv" class="row">
+                <input type="hidden" value="{%csrf_token%}" id="hid_csrf"/>
+                {% for t in topic %}
+                <h4 id="{{t.pk}}" class="topCls"><span class="badge badge-Info">{{t.name}}</span></h4>
+                &nbsp;
+                {% endfor %}
+            </div>
+        <br />
+            <div class="" id="">
+                {% for ans in answer %}
+                <div id="feed">
+                    <div id="row">
+                        <div>
+                            <h5><span class="">{{ans.ques.name}}</span></h5>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="" style="">
+                            <img src="{% static 'image/dp.jpg' %}" alt="img" class="quesImg" />
+                            <span style="font-weight:bold">
+                                {{ans.ques.created_by}}
+                            </span>
+                            <div>
+                                <small>{{ans.created_on}}</small>
+                            </div>
+                        </div>
+                        <div style="margin-top:0.85%">
+                            <p class="ansFont">{{ans.ans}}</p>
+                        </div>
+                    </div>
+                    <span id="{{ans.pk}}" class="badge badge-warning upvote" style="cursor:pointer">Upvote</span>
+                    <br />
+                    <textarea id="{{ans.pk}}Txt" class="commntTxt form form-control"></textarea>
+                    <span id="{{ans.pk}}" class="badge badge-success comment" style="cursor:pointer">Add comment</span>
+                    <br />
+                    {% for up in  ans.upvote.all%}
+                    {{up.upvote_by}}
+                    {% endfor %}
+                    <h6>Comments</h6>
+                    {% for comm in  ans.comment.all%}
+                    <span class="badge badge-Info">{{comm.comment_by}}</span> 
+                    <small>{{comm.comment}}</small>
+                    {% endfor %}
+                </div>
+                <br />
+                {% endfor %}
+            </div>
+    </div>
+    {%endblock%}
+<!--</body>
+</html>-->

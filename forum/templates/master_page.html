@@ -1,0 +1,87 @@
+﻿{% load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Q&A</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'jquery-ui.theme.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <script src="{% static 'jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'jquery-ui.min.js' %}"></script>
+    <script src="{% static 'popper.min.js'%}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
+    <script src="{% static 'index.js'%}"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+        <div class="container">
+            <a class="navbar-brand white">Q&A</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            {% if user.is_authenticated %}
+            <div id="searchDiv">
+                <input type="text" class="" id="searchTxt" placeholder="Find questions here ..." />
+            </div>
+            {% endif %}
+            <div class="collapse navbar-collapse" id="mainMenu">
+                {% if user.is_authenticated %}
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home'%}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="askQues" data-toggle="modal" href="#quesModal">Ask Question</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true">
+                            {{user.username}}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'my_account' %}">My account</a>
+                                <a class="dropdown-item" href="">Change password</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout'%}">Log out</a>
+                            </div>
+                        </li>
+                    </ul>
+                {% else %}
+                    <form class="form-inline ml-auto">
+                        <a href="{% url 'login' %}" class="btn btn-outline-secondary">Log in</a>
+                        <a href="{% url 'signup' %}" class="btn btn-primary ml-2">Sign up</a>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <input type="hidden" value="{%csrf_token%}" id="hid_csrf" />
+    <!-- Modal -->
+    <div id="quesModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="quesTitle">Ask Question</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="ques-body" style="height:80%;">
+                        <form method="post">
+                            {% csrf_token %}
+                            {%include 'includes/form.html'%}
+                            <input type="submit" class="btn btn-success" value="Post Question" />
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default close" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%block content%} {% endblock%}
+    {%block quesHome%} {% endblock%}
+</body>
+</html>

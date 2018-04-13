@@ -1,0 +1,50 @@
+﻿.navbar-brand, .nav-link{
+    color:white !important;
+}
+
+#feed, #topicDiv {
+    border: 1px solid #d6caca;
+    padding: 2%;
+}
+
+.modal-dialog {
+    height: 75%;
+}
+
+
+#searchDiv {
+    margin-left: 15%;
+    width: 50%;
+}
+
+#searchTxt {
+    width: 100%;
+}
+
+ul.ui-autocomplete {
+    list-style: none;
+}
+
+.ui-menu{
+    width:50%;
+}
+
+.ansDiv {
+    border: 1px solid #d6caca;
+    padding: 1%;
+}
+
+.commntTxt{
+    width: 30%;
+}
+
+.quesImg{
+    border-radius:50%;
+    width:3%;
+}
+
+.ansFont {
+    font-family: monospace;
+}
+
+
