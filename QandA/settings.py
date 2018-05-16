@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'forum',
     'widget_tweaks',
+    'tinymce'
 ]
 
 MIDDLEWARE = [

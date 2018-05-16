@@ -1,4 +1,34 @@
 ﻿$(document).ready(function () {
+
+    $('#id_img').val("img");
+    $('label[for=id_img]').hide();
+
+    function initTinyMce(txtArea) {
+        tinymce.init({
+            selector: txtArea,
+            height: 200,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code fullscreen',
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css']
+        });
+    }
+
+    initTinyMce('#id_ans');
+    initTinyMce('#id_desc');
+
+    //$("#writeAns").click(function () {
+    //    new nicEditor({ iconsPath: '../../static/nicEditorIcons.gif' }).panelInstance('id_ans');
+    //    $('.nicEdit-main').parent().prev('div').css('width', '100%');
+    //    $('.nicEdit-main').parent().css('width', '100%');
+    //    $('.nicEdit-main').css({ 'width': '100%', 'height': '50%' });
+    //});
+
     var csrf = $('#hid_csrf').val();
     var token = $(csrf).val();
 
@@ -50,22 +80,32 @@
     }
 
     $('.upvote').on("click", function () {
+        $(this).removeClass();
+        
         var ans_id = $(this).attr('id');
+        var url = '/upvote/';
+        var text = $(this).html();
+        if (text == "Upvoted")
+        {
+            $(this).addClass("badge badge-warning upvote");
+            url = '/undoUpvote/';
+            $(this).html("Upvote");
+        }
+        else {
+            $(this).addClass("badge badge-info upvoted");
+            $(this).html("Upvoted");
+        }
         $.ajax({
             type: 'POST',
-            url: '/upvote/',
+            url: url,
             data: { "ans_id": ans_id },
             success: function () {
                 console.log("success");
             }
         });
-
-        $('#askQues').click(function () {
-            $('#quesModal').modal('show');
-        });
     });
 
-    $('.comment').on("click", function () {
+    $('.commentSpan').on("click", function () {
         var ans_id = $(this).attr('id');
         comment = $('#'+ ans_id + 'Txt').val();
         $.ajax({

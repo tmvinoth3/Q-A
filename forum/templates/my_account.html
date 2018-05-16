@@ -1,13 +1,19 @@
 ﻿{% extends 'master_page.html '%}
 {% block content %}
-<div class="row">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <form method="post">
-            {% csrf_token %}
-            {% include 'includes/form.html' %}
-            <!--{{form.as_p}}-->
-            <button type="submit" class="btn btn-success">Save changes</button>
-        </form>
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10" id="dpDiv">
+
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Update profile picture</h3>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
+                    <!--{{form.as_p}}-->
+                    <button type="submit" class="btn btn-success">Save changes</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

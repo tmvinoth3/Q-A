@@ -6,31 +6,38 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 import json
 from urllib import parse as urlparse
 
-from forum.forms import CreateQuestion, AnswerQuestion
-from django.views.generic import ListView, UpdateView, CreateView
+from forum.forms import CreateQuestion, AnswerQuestion, UserProfileForm
+from django.views.generic import ListView, UpdateView, CreateView, View
 from django.core import serializers
 
 from django.urls import reverse_lazy
+import os
+from django.conf import settings
 
 # Create your views here.
 def home(req):
-    user_id = req.user.id
-    follow = Follow.objects.filter(user = req.user).all()
-    follow = [f.topic for f in follow]
-    question = Question.objects.filter(topic__in=follow).all()
-    answer = Answer.objects.filter(ques__in=question).all()
-    topic = Topic.objects.all()
+    if req.user.is_authenticated:
+       user_id = req.user.id
+       follow = Topic.objects.filter(follow__user=req.user)
+       question = Question.objects.filter(topic__in=follow).all()
+       answer = Answer.objects.filter(ques__in=question).all()
+       topic = Topic.objects.all()
+       user_upvoted_ans = Answer.objects.filter(upvote__upvote_by=req.user).filter(upvote__upvote=True).values_list('id', flat=True).order_by('id')
+       return render(req,'home.html',{'topic':topic,'answer':answer,'upvote':upvote, 'follow':follow, 'user_upvote':user_upvoted_ans})
+    else:
+        return redirect('login')
 
+def createQuestion(req):
     if req.method == 'POST':
         form = CreateQuestion(req.POST)
         if form.is_valid():
-            ques = form.save(commit=False)
+            ques = form.save(commit = False)
             ques.created_by = req.user
             ques.save()
             return redirect('home')
     else:
         form = CreateQuestion()
-    return render(req,'home.html',{'topic':topic,'answer':answer,'upvote':upvote,'form':form})
+    return render(req,'createQues.html',{'form':form})
 
 def getSearchQuesions(req,ques_id):
     print("getSearchQuesions")
@@ -39,6 +46,7 @@ def getSearchQuesions(req,ques_id):
     #ques_id = req.GET['ques_id']
     question = get_object_or_404(Question, pk=ques_id)
     answer = Answer.objects.filter(ques=question)
+    user_upvoted_ans = Answer.objects.filter(upvote__upvote_by=req.user).filter(upvote__upvote=True).values_list('id', flat=True).order_by('id')
     if req.method == 'POST':
         form = AnswerQuestion(req.POST)
         if form.is_valid():
@@ -49,7 +57,7 @@ def getSearchQuesions(req,ques_id):
             return redirect('getSearchQuesions',ques_id)
     else:
         form = AnswerQuestion()
-    return render(req,'quesHome.html',{'topic':topic ,'question':question,'answer':answer,'form':form})
+    return render(req,'quesHome.html',{'topic':topic ,'question':question,'answer':answer,'form':form,'user_upvote':user_upvoted_ans})
 
 def follow(req):
     if req.method == 'POST':
@@ -81,11 +89,26 @@ def upvote(req):
     if req.method == 'POST':
         ans_id = req.POST['ans_id']
         answer = get_object_or_404(Answer, pk=ans_id)
-        up = Upvote()
-        up.upvote = True
-        up.upvote_by = req.user
-        up.ans = answer
-        up.save()
+        try:
+            upv = Upvote.objects.get(upvote_by=req.user, ans=answer)
+            upv.upvote = True
+            upv.save()
+        except Upvote.DoesNotExist:
+            upv = Upvote()
+            upv.upvote = True
+            upv.upvote_by = req.user
+            upv.ans = answer
+            upv.save()
+    return redirect('home')
+
+@csrf_exempt
+def undo_upvote(req):
+    if req.method == 'POST':
+        ans_id = req.POST['ans_id']
+        answer = get_object_or_404(Answer, pk=ans_id)
+        upv = Upvote.objects.get(upvote_by=req.user, ans=answer)
+        upv.upvote = False
+        upv.save()
     return redirect('home')
 
 @csrf_exempt
@@ -101,16 +124,21 @@ def comment(req):
         comm.save()
     return redirect('home')
 
-class UserUpdateView(CreateView):
-    model = UserProfile
-    fields = ('avatar',)
-    template_name = 'my_account.html'
-    success_url = reverse_lazy('my_account')
+class UserUpdateView(View):
 
-    def form_valid(self, form):
-        user_profile = form.save(commit=True)
-        user_profile.user = self.user
-        user_profile.save()
+    def get(self, req):
+        self.form = UserProfileForm()
+        return render(req, 'my_account.html', {'form':self.form})
 
-    def get_object(self):
-        return self.request.user
+    def post(self, req):
+        form = UserProfileForm(req.POST, req.FILES)
+        if form.is_valid():
+            print("testing from userprofileform after")
+            fil_user = get_object_or_404(UserProfile, user = req.user)
+            fil_user.avatar = "{}_{}".format(req.user.id, form.cleaned_data['avatar'])
+            file = req.FILES['avatar']
+            with open("forum/static/image/{}_{}".format(req.user.id,file.name), 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+            fil_user.save()
+        return redirect('my_account')

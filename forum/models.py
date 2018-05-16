@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from tinymce.models import HTMLField
 
 # Create your models here.
 class Topic(models.Model):
@@ -13,15 +13,18 @@ class Topic(models.Model):
 
 class Question(models.Model):
     name = models.CharField(max_length=300, unique=True)
+    desc = HTMLField()
     img = models.CharField(max_length=100)
     topic = models.ForeignKey(Topic, related_name='question')
     created_by = models.ForeignKey(User, related_name='question')
     created_on = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(max_length=50, default = '')
     def __str__(self):
         return self.name
 
 class Answer(models.Model):
-    ans = models.TextField()
+    #ans = models.TextField()
+    ans = HTMLField()
     img = models.CharField(max_length=100)
     created_by = models.ForeignKey(User, related_name='answer')
     created_on = models.DateTimeField(auto_now_add=True)
@@ -50,5 +53,5 @@ class Follow(models.Model):
     user = models.ForeignKey(User, related_name='follow')
 
 class UserProfile(models.Model):
-    user   = models.OneToOneField(User, related_name='userprofile')
-    avatar = models.ImageField('img',upload_to='static/image/')
+    user   = models.OneToOneField(User, related_name='userprofiles')
+    avatar = models.FileField('img',upload_to='static/image/')
