@@ -107,7 +107,21 @@
 
     $('.commentSpan').on("click", function () {
         var ans_id = $(this).attr('id');
-        comment = $('#'+ ans_id + 'Txt').val();
+        comment = $('#' + ans_id + 'Txt').val();
+        avatar = $('#hidAvatar').val();
+        user = $('#hidUser').val();
+        $('#' + ans_id + 'Txt').val('');
+
+        $(this).parent().next().next().find('.newComment').append(`
+            <div>
+            <img class="commentImg" src="/static/image/`+ avatar +`" />
+            <span class="badge badge-Info">`+user+`</span>
+            <small>`+ comment +`</small>
+                            </div>
+            `);
+
+        $(this).parent().next().next().find('.noComment').hide();
+
         $.ajax({
             type: 'POST',
             url: '/comment/',
@@ -116,6 +130,36 @@
                 console.log("success");
             }
         });
+    });
+
+    function userProfile(user_id)
+    {
+        window.location = '/userProfile/' + user_id;
+    }
+
+    $('.quesImg').on("click", function () {
+        user_id = $(this).parent().attr("id");
+        userProfile(user_id);
+    });
+
+    $('.modalCommentImg').on("click", function () {
+        user_id = $(this).parent().attr("id");
+        userProfile(user_id);
+    });
+
+    $('.commentImg').on("click", function () {
+        user_id = $(this).parent().attr("id");
+        userProfile(user_id);
+    });
+
+    $('.modalQuesImg').on("click", function () {
+        user_id = $(this).parent().attr("id");
+        userProfile(user_id);
+    });
+
+    $(".writeAns").on("click", function () {
+        ques_id = $(this).attr("id");
+        $("#ansQuesId").val(ques_id);
     });
 
 }); //End of Document

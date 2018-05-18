@@ -142,3 +142,41 @@ class UserUpdateView(View):
                     destination.write(chunk)
             fil_user.save()
         return redirect('my_account')
+
+@csrf_exempt
+def userProfile(req, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    question = Question.objects.filter(created_by = user_id).all()
+    answer = Answer.objects.filter(created_by = user_id).all()
+    follow_topic = follow = Topic.objects.filter(follow__user=user_id).all()
+    if req.method == 'POST':
+        form = AnswerQuestion(req.POST)
+        if form.is_valid():
+            ans = form.save(commit=False)
+            ans.created_by = req.user
+            ans.ques = question
+            ans.save()
+            return redirect('user_profile',user_id)
+    else:
+        form = AnswerQuestion()
+    return render(req,'userProfile.html',{"question":question,"answer":answer,"topics":follow_topic, "sel_user":user, "form":form})
+
+@csrf_exempt
+def topicDetail(req, topic_id):
+    topic = get_object_or_404(Topic, pk=topic_id)
+    question = Question.objects.filter(topic = topic_id).all()
+    answer = Answer.objects.filter(ques__in = question).all()
+    user_follow_topics = Topic.objects.filter(follow__user=req.user).values_list('id', flat=True)
+    if req.method == 'POST':
+        form = AnswerQuestion(req.POST)
+        if form.is_valid():
+            ans = form.save(commit=False)
+            ans.created_by = req.user
+            ques_id = req.POST['quesId']
+            sel_question = get_object_or_404(Question, pk=ques_id)
+            ans.ques = sel_question
+            ans.save()
+            return redirect('topic_detail',topic_id)
+    else:
+        form = AnswerQuestion()
+    return render(req,'topicDetail.html',{"question":question,"answer":answer, "sel_topic":topic, "form":form, "user_topic":user_follow_topics})

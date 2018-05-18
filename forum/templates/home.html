@@ -14,12 +14,11 @@
             <div class="card">
                 <div id="topicDiv" class="row card-body">
                     <input type="hidden" value="{%csrf_token%}" id="hid_csrf" />
-
                     {% for t in topic %}
                     {% if t in follow %}
-                    <h4 id="{{t.pk}}" class="topCls"><span class="badge badge-success">{{t.name}}</span></h4>
+                    <h4 id="{{t.pk}}" class=""><span class="badge badge-success">{{t.name}}</span></h4>
                     {% else %}
-                    <h4 id="{{t.pk}}" class="topCls"><span class="badge badge-warning">{{t.name}}</span></h4>
+                    <h4 style="cursor:pointer;" id="{{t.pk}}" class="topCls"><span class="badge badge-warning">{{t.name}} <i class="fas fa-plus-circle"></i></span></h4>
                     {% endif %}
                     &nbsp;
                     {% endfor %}
@@ -29,6 +28,8 @@
 
         <br />
             <div class="" id="">
+                <input id="hidAvatar" type="hidden" value="{{user.userprofiles.avatar}}" />
+                <input id="hidUser" type="hidden" value="{{user.username}}" />
                 {% for ans in answer %}
                 <div class="card">
                     <div id="feed" class="card-body">
@@ -38,7 +39,7 @@
                             </div>
                         </div>
                         <div class="" id="{{ans.pk}}_ans">
-                            <div class="" style="">
+                            <div id="{{ans.created_by.id}}" class="" style="">
                                 <img src="/static/image/{{ans.created_by.userprofiles.avatar}}" alt="img" class="quesImg" />
                                 <span style="font-weight:bold">
                                     {{ans.created_by}}
@@ -68,16 +69,20 @@
                         </div>
                         <h6>Comments</h6>
                         <div class="commentDiv">
+                            <div class="newComment"></div>
                             {% for comm in ans.comment.all|slice:":1" %}
-                            <span class="badge badge-Info">{{comm.comment_by}}</span>
-                            <small>{{comm.comment}}</small>
+                            <div id="{{comm.comment_by.id}}">
+                                <img class="commentImg" src="/static/image/{{comm.comment_by.userprofiles.avatar}}" />
+                                <span class="badge badge-Info">{{comm.comment_by}}</span>
+                                <small>{{comm.comment}}</small>
+                            </div>
                             <br />
                             {% endfor %}
 
                             {%if ans.comment.count > 0 %}
                             <a href="" data-toggle="modal" data-target="#{{ans.pk}}_cmntModal">View all comments</a>
                             {% else %}
-                            <small>No comments</small>
+                            <small class="noComment">No comments</small>
                             {% endif %}
 
                             <div id="{{ans.pk}}_cmntModal" class="modal fade commentModal" role="dialog">
@@ -89,8 +94,8 @@
                                         </div>
                                         <div class="modal-body" style="">
                                             <div class="" style="width:170%">
-                                                <div class="" >
-                                                    <img src="/static/image/{{ans.created_by.userprofiles.avatar}}" alt="img" style="" class="quesImg" />
+                                                <div class="" id="{{ans.created_by.id}}" style="width:150%">
+                                                    <img src="/static/image/{{ans.created_by.userprofiles.avatar}}" alt="img" style="" class="modalQuesImg" />
                                                     <span style="font-weight:bold">
                                                         {{ans.created_by}}
                                                     </span>
@@ -99,13 +104,16 @@
                                                     </div>
                                                 </div>
                                                 <div style="margin-top:0.85%">
-                                                    <p class="ansFont">{{ans.ans | safe}}</p>
+                                                    <div class="ansFont">{{ans.ans | safe}}</div>
                                                 </div>
                                             </div>
                                             <div id="{{ans.pk}}_cmnt-body" style="height:65%;padding:1%;overflow-y:auto">
                                                 {% for comm in ans.comment.all %}
-                                                <span class="badge badge-Info">{{comm.comment_by}}</span>
-                                                <small>{{comm.comment}}</small>
+                                                <div id="{{comm.comment_by.id}}">
+                                                    <img class="modalCommentImg" src="/static/image/{{comm.comment_by.userprofiles.avatar}}" />
+                                                    <span class="badge badge-Info">{{comm.comment_by}}</span>
+                                                    <small>{{comm.comment}}</small>
+                                                </div>
                                                 <br />
                                                 {% endfor %}
                                             </div>

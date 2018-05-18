@@ -47,6 +47,8 @@ class Comment(models.Model):
     commented_on = models.DateTimeField(auto_now_add=True)
     #ques = models.ForeignKey(Question, related_name='comment')
     ans = models.ForeignKey(Answer, related_name='comment')
+    class Meta:
+        ordering = ['-commented_on']
 
 class Follow(models.Model):
     topic = models.ForeignKey(Topic, related_name='follow')

@@ -23,6 +23,10 @@
 
 ul.ui-autocomplete {
     list-style: none;
+    padding-top:10px;
+    margin-left:0px;
+    font-family: sans-serif;
+    font-size:medium;
 }
 
 .ui-menu{
@@ -49,11 +53,6 @@ ul.ui-autocomplete {
     /*width: 30%;*/
 }
 
-.quesImg{
-    border-radius:50%;
-    width:3%;
-}
-
 .ansFont {
     font-family: monospace;
     background-color: #f1f1f1;
@@ -67,9 +66,7 @@ ul.ui-autocomplete {
     background-attachment: fixed;
 }
 
-#loginDiv .card, #askQues .card, #dpDiv .card {
-    margin-top: 3%;
-}
+
 
 #id_img{
     display:none;
@@ -83,6 +80,11 @@ ul.ui-autocomplete {
     cursor: pointer;
     height: 3%;
     margin-top: 2%;
+}
+
+.modalCommentImg {
+    border-radius: 50%;
+    height: 15%;
 }
 
 @media only screen and (min-width: 750px) {
@@ -107,6 +109,36 @@ ul.ui-autocomplete {
     #searchTxt {
         width: 80%;
         margin-left: 10%;
+        height: 25%;
+    }
+
+    .commentImg {
+        border-radius: 50%;
+        height: 1.5%;
+    }
+
+    .quesImg {
+        border-radius: 50%;
+        width: 6%;
+        height: 2.5%;
+    }
+
+    .modalQuesImg {
+        border-radius: 50%;
+        width: 3.5%;
+        height: 15%;
+    }
+
+    .dropdown-menu{
+        width:50%;
+    }
+
+    #cont {
+        margin-top: 7.5%;
+    }
+
+    #signupDiv .card, #loginDiv .card, #askQues .card, #dpDiv .card {
+        margin-top: 20%;
     }
 }
 
@@ -121,7 +153,7 @@ ul.ui-autocomplete {
     }
 
     #ansModal .modal-body {
-        height: 81%;
+        height: 75%;
     }
 
     #searchDiv {
@@ -132,6 +164,40 @@ ul.ui-autocomplete {
     #searchTxt {
         width: 100%;
     }
+
+    .commentImg {
+        border-radius: 50%;
+        height: 5%;
+    }
+
+    .quesImg {
+        border-radius: 50%;
+        width: 3.5%;
+        height: 6%;
+    }
+
+    .modalQuesImg {
+        border-radius: 50%;
+        width: 3.5%;
+        height: 12%;
+    }
+
+    .dropdown-menu {
+        right: 0.5% !important;
+        width: 12%;
+    }
+
+    #cont {
+        margin-top: 2.5%;
+    }
+
+    #askQues .card, #dpDiv .card {
+        
+    }
+
+    #loginDiv .card, #signupDiv .card {
+        margin-top: 15%;
+    }
 }
 
 
@@ -139,9 +205,8 @@ ul.ui-autocomplete {
         background: #454545;
     }
 
-.ui-menu .ui-menu-item a {
-    background: red;
-    height: 10px;
-    font-size: 8px;
+#topicDetailDiv {
+    padding: 0.5%;
+    background-color: #11cbe624;
 }
 

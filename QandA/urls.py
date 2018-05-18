@@ -36,5 +36,7 @@ urlpatterns = [
     url(r'^settings/account/$', for_views.UserUpdateView.as_view(), name='my_account'),
     url(r'^tinymce/', include('tinymce.urls')),
 
-     url(r'^undoUpvote/$', for_views.undo_upvote, name='undo_upvote'),
+    url(r'^undoUpvote/$', for_views.undo_upvote, name='undo_upvote'),
+    url(r'^userProfile/(?P<user_id>\d+)/$', for_views.userProfile, name='user_profile'),
+    url(r'^topicDetail/(?P<topic_id>\d+)/$', for_views.topicDetail, name='topic_detail'),
 ]
