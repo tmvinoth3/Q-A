@@ -1,0 +1,188 @@
+﻿{%extends 'master_page.html'%}
+{% load static %}
+<!--<!DOCTYPE html>-->
+<!--<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Home</title>
+</head>
+<body>-->
+    {%block content%}
+
+<div class="container" id="cont">
+
+    <div class="row">
+        <div>
+            <img src="/static/image/{{sel_user.userprofiles.avatar}}" />
+        </div>
+        <div>
+            <div class="col-md-9">
+                <h3>{{sel_user.username}}</h3>
+            </div>
+            <div class="col-md-9">
+                <h3>{{sel_user.email}}</h3>
+            </div>
+        </div>
+    </div>
+    <br />
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a style="color:black !important;" class="nav-link active" data-toggle="tab" href="#quesId">Questions</a>
+        </li>
+        <li class="nav-item">
+            <a style="color:black !important;" class="nav-link" data-toggle="tab" href="#ansId"> Answers </a>
+        </li>
+        <li class="nav-item">
+            <a style="color:black !important;" class="nav-link" data-toggle="tab" href="#topicId"> Topics </a>
+        </li>
+    </ul>
+
+    <!--<div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="currentPreferences">
+            <ul class="list-group media-list media-list-stream">
+                <p>Pref</p>
+            </ul>
+        </div>
+    </div>-->
+
+        <br />
+       <div class="tab-content">
+           <div role="tabpanel" class="tab-pane fade in" id="ansId">
+               <input id="hidAvatar" type="hidden" value="{{user.userprofiles.avatar}}" />
+               <input id="hidUser" type="hidden" value="{{user.username}}" />
+               {% for ans in answer %}
+               <div class="card">
+                   <div id="feed" class="card-body">
+                       <div id="row">
+                           <div>
+                               <h5><span class="">{{ans.ques.name}}</span></h5>
+                           </div>
+                       </div>
+                       <div class="" id="{{ans.pk}}_ans">
+                           <div id="{{user.id}}" class="" style="">
+                               <img src="/static/image/{{ans.created_by.userprofiles.avatar}}" alt="img" class="quesImg" />
+                               <span style="font-weight:bold">
+                                   {{ans.created_by}}
+                               </span>
+                               <div>
+                                   <small>{{ans.created_on}}</small>
+                               </div>
+                           </div>
+                           <div style="margin-top:0.85%">
+                               <div class="ansFont">{{ans.ans | safe}}</div>
+                           </div>
+                       </div>
+                       {% if ans.pk in user_upvote%}
+                       <span id="{{ans.pk}}" class="badge badge-Info upvote" style="cursor:pointer">Upvoted</span>
+                       {% else %}
+                       <span id="{{ans.pk}}" class="badge badge-warning upvote" style="cursor:pointer">Upvote</span>
+                       {%endif%}
+                       {% for up in  ans.upvote.all%}
+                       <small>{{up.upvote_by}}</small>
+                       {% endfor %}
+                       <br />
+                       <div class="row">
+                           <div class="col-md-4 col-sm-4">
+                               <textarea id="{{ans.pk}}Txt" class="commntTxt form form-control"></textarea>
+                           </div>
+                           <span id="{{ans.pk}}" class="badge badge-success commentSpan">Add comment</span>
+                       </div>
+                       <h6>Comments</h6>
+                       <div class="commentDiv">
+                           <div class="newComment"></div>
+                           {% for comm in ans.comment.all|slice:":1" %}
+                           <div>
+                               <img class="commentImg" src="/static/image/{{comm.comment_by.userprofiles.avatar}}" />
+                               <span class="badge badge-Info">{{comm.comment_by}}</span>
+                               <small>{{comm.comment}}</small>
+                           </div>
+                           <br />
+                           {% endfor %}
+
+                           {%if ans.comment.count > 0 %}
+                           <a href="" data-toggle="modal" data-target="#{{ans.pk}}_cmntModal">View all comments</a>
+                           {% else %}
+                           <small class="noComment">No comments</small>
+                           {% endif %}
+
+                           <div id="{{ans.pk}}_cmntModal" class="modal fade commentModal" role="dialog">
+                               <div class="modal-dialog">
+                                   <div class="modal-content">
+                                       <div class="modal-header">
+                                           <h4 class="modal-title" id="quesTitle">Comments</h4>
+                                           <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                       </div>
+                                       <div class="modal-body" style="">
+                                           <div class="" style="width:170%">
+                                               <div class="" style="width:150%">
+                                                   <img src="/static/image/{{ans.created_by.userprofiles.avatar}}" alt="img" style="" class="modalQuesImg" />
+                                                   <span style="font-weight:bold">
+                                                       {{ans.created_by}}
+                                                   </span>
+                                                   <div>
+                                                       <small>{{ans.created_on}}</small>
+                                                   </div>
+                                               </div>
+                                               <div style="margin-top:0.85%">
+                                                   <p class="ansFont">{{ans.ans | safe}}</p>
+                                               </div>
+                                           </div>
+                                           <div id="{{ans.pk}}_cmnt-body" style="height:65%;padding:1%;overflow-y:auto">
+                                               {% for comm in ans.comment.all %}
+                                               <div>
+                                                   <img class="modalCommentImg" src="/static/image/{{comm.comment_by.userprofiles.avatar}}" />
+                                                   <span class="badge badge-Info">{{comm.comment_by}}</span>
+                                                   <small>{{comm.comment}}</small>
+                                               </div>
+                                               <br />
+                                               {% endfor %}
+                                           </div>
+                                       </div>
+                                       <div class="modal-footer">
+                                           <button type="button" class="btn btn-default close" data-dismiss="modal">Close</button>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <br />
+               {% endfor %}
+           </div>
+
+           <div role="tabpanel" class="tab-pane active" id="quesId">
+               {% for ques in question %}
+               <div id="quesDiv">
+                   <div id="">
+                       <img src="/static/image/{{ques.created_by.userprofiles.avatar}}" alt="img" class="quesImg" />
+                       <span style="font-weight:bold">
+                           {{ques.created_by}}
+                       </span>
+                       <div>
+                           <small>{{ques.created_on}}</small>
+                       </div>
+                       <h5><span class="">{{ques.name}}</span></h5>
+                       <span class="">{{ques.desc|safe }}</span>
+                       <a href="#ansModal" id="{{ques.id}}" class="writeAns" data-toggle="modal">Write Answer</a>
+                   </div>
+               </div>
+               <br />
+               {% endfor %}
+           </div>
+
+           <div id="topicId" role="tabpanel" class="tab-pane fade in">
+               <input type="hidden" value="{%csrf_token%}" id="hid_csrf" />
+               <ul>
+                   {% for t in topics %}
+                   <li>
+                       <a href="/topicDetail/{{t.pk}}" id="{{t.pk}}" class="user_topic">{{t.name}}</a>
+                   </li>
+                   {% endfor %}
+               </ul>
+           </div>
+       </div>
+    </div>
+    {%endblock%}
+<!--</body>
+</html>-->
