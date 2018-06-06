@@ -13,14 +13,20 @@
 
     <div class="row">
         <div>
-            <img src="/static/image/{{sel_user.userprofiles.avatar}}" />
+            <img id="userProImg" src="/static/image/{{sel_user.userprofiles.avatar}}" />
         </div>
-        <div>
-            <div class="col-md-9">
+        <div style="padding: 2%; font-family: -webkit-body;">
+            <div class="col-md-12">
                 <h3>{{sel_user.username}}</h3>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <h3>{{sel_user.email}}</h3>
+            </div>
+            <div class="col-md-12">
+                <h3>{{sel_user.answer.count}} answers</h3>
+            </div>
+            <div class="col-md-12">
+                <h3>{{sel_user.question.count}} questions</h3>
             </div>
         </div>
     </div>
@@ -59,7 +65,7 @@
                            </div>
                        </div>
                        <div class="" id="{{ans.pk}}_ans">
-                           <div id="{{user.id}}" class="" style="">
+                           <div id="{{ans.created_by.id}}" class="" style="">
                                <img src="/static/image/{{ans.created_by.userprofiles.avatar}}" alt="img" class="quesImg" />
                                <span style="font-weight:bold">
                                    {{ans.created_by}}
@@ -91,7 +97,7 @@
                        <div class="commentDiv">
                            <div class="newComment"></div>
                            {% for comm in ans.comment.all|slice:":1" %}
-                           <div>
+                           <div id="{{comm.comment_by.id}}">
                                <img class="commentImg" src="/static/image/{{comm.comment_by.userprofiles.avatar}}" />
                                <span class="badge badge-Info">{{comm.comment_by}}</span>
                                <small>{{comm.comment}}</small>
@@ -129,7 +135,7 @@
                                            </div>
                                            <div id="{{ans.pk}}_cmnt-body" style="height:65%;padding:1%;overflow-y:auto">
                                                {% for comm in ans.comment.all %}
-                                               <div>
+                                               <div id="{{comm.comment_by.id}}">
                                                    <img class="modalCommentImg" src="/static/image/{{comm.comment_by.userprofiles.avatar}}" />
                                                    <span class="badge badge-Info">{{comm.comment_by}}</span>
                                                    <small>{{comm.comment}}</small>
@@ -154,7 +160,7 @@
            <div role="tabpanel" class="tab-pane active" id="quesId">
                {% for ques in question %}
                <div id="quesDiv">
-                   <div id="">
+                   <div id="{{ques.created_by.id}}">
                        <img src="/static/image/{{ques.created_by.userprofiles.avatar}}" alt="img" class="quesImg" />
                        <span style="font-weight:bold">
                            {{ques.created_by}}

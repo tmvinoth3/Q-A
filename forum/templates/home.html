@@ -16,9 +16,9 @@
                     <input type="hidden" value="{%csrf_token%}" id="hid_csrf" />
                     {% for t in topic %}
                     {% if t in follow %}
-                    <h4 id="{{t.pk}}" class=""><span class="badge badge-success">{{t.name}}</span></h4>
+                    <h5 id="{{t.pk}}" style="cursor:pointer;" class="topClsunFollow"><span class="badge badge-success">{{t.name}} <i class="fas fa-times-circle"></i></span></h5>
                     {% else %}
-                    <h4 style="cursor:pointer;" id="{{t.pk}}" class="topCls"><span class="badge badge-warning">{{t.name}} <i class="fas fa-plus-circle"></i></span></h4>
+                    <h5 style="cursor:pointer;" id="{{t.pk}}" class="topCls"><span class="badge badge-warning">{{t.name}} <i class="fas fa-plus-circle"></i></span></h5>
                     {% endif %}
                     &nbsp;
                     {% endfor %}
@@ -27,11 +27,11 @@
             </div>
 
         <br />
-            <div class="" id="">
+            <div class="infinite-container" id="ansFeed">
                 <input id="hidAvatar" type="hidden" value="{{user.userprofiles.avatar}}" />
                 <input id="hidUser" type="hidden" value="{{user.username}}" />
                 {% for ans in answer %}
-                <div class="card">
+                <div class="card infinite-item">
                     <div id="feed" class="card-body">
                         <div id="row">
                             <div>
@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                             <div style="margin-top:0.85%">
-                                <p class="ansFont">{{ans.ans | safe}}</p>
+                                <div class="ansFont">{{ans.ans | safe}}</div>
                             </div>
                         </div>
                         {% if ans.pk in user_upvote%}
@@ -127,9 +127,15 @@
                         </div>
                     </div>
                 </div>
-                <br />
+                <!--<br />-->
                 {% endfor %}
             </div>
+        {% if answer.has_next %}
+        <a class="infinite-more-link" href="?page={{ numbers.next_page_number }}">More</a>
+        {% endif %}
+        <div class="loading" style="display: none;">
+            Loading...
+        </div>
     </div>
     {%endblock%}
 <!--</body>

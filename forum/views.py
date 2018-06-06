@@ -14,6 +14,8 @@ from django.urls import reverse_lazy
 import os
 from django.conf import settings
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 # Create your views here.
 def home(req):
     if req.user.is_authenticated:
@@ -23,6 +25,16 @@ def home(req):
        answer = Answer.objects.filter(ques__in=question).all()
        topic = Topic.objects.all()
        user_upvoted_ans = Answer.objects.filter(upvote__upvote_by=req.user).filter(upvote__upvote=True).values_list('id', flat=True).order_by('id')
+
+       page = req.GET.get('page', 1)
+       paginator = Paginator(answer, 3)
+       try:
+           answer = paginator.page(page)
+       except PageNotAnInteger:
+           numbers = paginator.page(1)
+       except EmptyPage:
+           numbers = paginator.page(paginator.num_pages)
+
        return render(req,'home.html',{'topic':topic,'answer':answer,'upvote':upvote, 'follow':follow, 'user_upvote':user_upvoted_ans})
     else:
         return redirect('login')
@@ -70,6 +82,18 @@ def follow(req):
         f = Follow(topic=topic, user=user )
         f.save()
     return HttpResponse('follow success')
+
+def unfollow(req):
+    if req.method == 'POST':
+        req_body = req.body.decode("utf-8")
+        json_data_string = json.dumps(urlparse.parse_qs(req_body))
+        json_data = eval(json_data_string)
+        topic_id = int(json_data['topic_id'][0])
+        topic = get_object_or_404(Topic, pk=int(topic_id))
+        user = get_object_or_404(User, pk=req.user.id)
+        f = Follow.objects.get(topic=topic, user=user)
+        f.delete()
+    return HttpResponse('unfollow success')
 
 def getQuestions(req):
     if req.method == 'POST':

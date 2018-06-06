@@ -20,11 +20,11 @@
             </div>
             {%if sel_topic.pk in user_topic%}
                 <div class="col-md-12">
-                    <button class="btn btn-default">Unfollow <i class="fas fa-plus-circle"></i></button>
+                    <button class="btn topClsunFollow" id="{{sel_topic.pk}}" style="background-color: #d61f1f54;">Unfollow</button>
                 </div>
             {%else%}
                 <div class="col-md-12">
-                    <button class="bt">Follow <i class="fas fa-plus-circle"></i></button>
+                    <button class="btn topCls" id="{{sel_topic.pk}}" style="background-color: #0fbf1a7d;">Follow <i class="fas fa-plus-circle"></i></button>
                 </div>
             {%endif%}
     </div>
@@ -115,7 +115,7 @@
                                     </div>
                                     <div class="modal-body" style="">
                                         <div class="" style="width:170%">
-                                            <div class="" style="width:150%">
+                                            <div class="" style="width:150%" id="{{ans.created_by.id}}">
                                                 <img src="/static/image/{{ans.created_by.userprofiles.avatar}}" alt="img" style="" class="modalQuesImg" />
                                                 <span style="font-weight:bold">
                                                     {{ans.created_by}}
@@ -125,12 +125,12 @@
                                                 </div>
                                             </div>
                                             <div style="margin-top:0.85%">
-                                                <p class="ansFont">{{ans.ans | safe}}</p>
+                                                <div class="ansFont">{{ans.ans | safe}}</div>
                                             </div>
                                         </div>
                                         <div id="{{ans.pk}}_cmnt-body" style="height:65%;padding:1%;overflow-y:auto">
                                             {% for comm in ans.comment.all %}
-                                            <div>
+                                            <div id="{{comm.comment_by.id}}">
                                                 <img class="modalCommentImg" src="/static/image/{{comm.comment_by.userprofiles.avatar}}" />
                                                 <span class="badge badge-Info">{{comm.comment_by}}</span>
                                                 <small>{{comm.comment}}</small>
@@ -155,7 +155,7 @@
         <div role="tabpanel" class="tab-pane active" id="quesId">
             {% for ques in question %}
             <div id="quesDiv">
-                <div id="">
+                <div id="{{ques.created_by.id}}">
                     <img src="/static/image/{{ques.created_by.userprofiles.avatar}}" alt="img" class="quesImg" />
                     <span style="font-weight:bold">
                         {{ques.created_by}}

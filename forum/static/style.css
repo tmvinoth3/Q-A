@@ -87,8 +87,10 @@ ul.ui-autocomplete {
     height: 15%;
 }
 
+
+
 @media only screen and (min-width: 750px) {
-    .commentSpan {
+        .commentSpan {
         cursor: pointer;
         height: 1.2%;
         margin-top: 2%;
@@ -210,3 +212,26 @@ ul.ui-autocomplete {
     background-color: #11cbe624;
 }
 
+#userProImg {
+    padding: 5%;
+    border-radius: 15%;
+}
+
+.infinite-item{
+    margin-bottom:1.5em;
+}
+
+.loading {
+    background: url(image/loading.gif);
+    display: block;
+    position: fixed;
+    z-index: 100;
+    background-color: #a72727;
+    opacity: 0.75;
+    /* background-repeat: no-repeat; */
+    background-position: center;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 0;
+}

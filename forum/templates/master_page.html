@@ -15,6 +15,9 @@
     <script src="{% static 'tinymce.min.js'%}"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <!--<script src="{% static 'nicEdit.js'%}"></script>-->
+    <!--<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>-->
+    <script src="{% static 'jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'infinite.min.js' %}"></script>
 </head>
 <body id="masterBody">
     <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
@@ -44,7 +47,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" href="{% url 'my_account' %}">My account</a>
-                                <a class="dropdown-item" href="">Change password</a>
+                                <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{% url 'logout'%}">Log out</a>
                             </div>

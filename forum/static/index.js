@@ -1,6 +1,16 @@
 ﻿$(document).ready(function () {
 
-    $('#id_img').val("img");
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function ($items) {
+            $('.loading').hide();
+        }
+    });
+
+    $("[name='img']").val("img");
     $('label[for=id_img]').hide();
 
     function initTinyMce(txtArea) {
@@ -40,6 +50,23 @@
             type: "POST",
             success: function (res) {
                 console.log(res);
+                //window.location = '/';
+                window.location.reload();
+
+            }
+        });
+    });
+
+    $('.topClsunFollow').on("click", function () {
+        var id = $(this).attr('id');
+        $.ajax({
+            url: '/unfollow/',
+            data: { 'topic_id': id, 'csrfmiddlewaretoken': token },
+            type: "POST",
+            success: function (res) {
+                console.log(res);
+                //window.location = '/';
+                window.location.reload();
             }
         });
     });
@@ -136,6 +163,26 @@
     {
         window.location = '/userProfile/' + user_id;
     }
+
+    $(".infinite-container").on("click", '.infinite-item .quesImg', function () {
+        user_id = $(this).parent().attr("id");
+        userProfile(user_id);
+    });
+
+    $(".infinite-container").on("click", '.infinite-item .modalCommentImg', function () {
+        user_id = $(this).parent().attr("id");
+        userProfile(user_id);
+    });
+
+    $(".infinite-container").on("click", '.infinite-item .commentImg', function () {
+        user_id = $(this).parent().attr("id");
+        userProfile(user_id);
+    });
+
+    $(".infinite-container").on("click", '.infinite-item .modalQuesImg', function () {
+        user_id = $(this).parent().attr("id");
+        userProfile(user_id);
+    });
 
     $('.quesImg').on("click", function () {
         user_id = $(this).parent().attr("id");
